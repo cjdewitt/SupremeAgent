@@ -20,7 +20,8 @@ To get started with Supreme Agent, follow these steps:
 
 3. **Run the application**:
     ```sh
-    python main.py
+    chmod +x launch_supreme.sh
+    ./launch_supreme.sh
     ```
 
 ## Usage

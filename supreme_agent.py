@@ -25,7 +25,7 @@ from selenium.webdriver.support import expected_conditions as EC
 # Configure logging
 logging.basicConfig(
     level=logging.DEBUG,  # Set to DEBUG to capture all levels of log messages
-    format='%(asctime)s - %(levelname)s - %(message)s',  # Include timestamp, log level, and message
+    format='%(asctime)s - %(levelname)s - %(message)s',  
     handlers=[
         logging.FileHandler("supreme_agent.log"),  # Log to a file
         logging.StreamHandler()  # Also log to console
@@ -117,7 +117,7 @@ class SystemResources:
             chrome_options.add_argument("--no-sandbox")
 
             # Initialize WebDriver
-            service = Service()  # Assumes chromedriver is in PATH
+            service = Service()  
             driver = webdriver.Chrome(service=service, options=chrome_options)
             self.browser = driver
             logging.info("Selenium WebDriver initialized successfully")
@@ -191,11 +191,11 @@ class SupremeAgent:
     
     def __init__(self):
         self.swarm_client = Swarm()
-        self.speech_client = OpenAI()  # Added this as it's used in analyze_task
+        self.speech_client = OpenAI() 
         self.progress = TranslationProgress()
         self.system = SystemResources()
-        self.available_tools = {}  # Initialize as empty dictionary
-        self.setup_tools()  # Call setup_tools after initializing required attributes
+        self.available_tools = {}  
+        self.setup_tools() 
 
     def setup_tools(self):
         """Set up available tools for agents."""
@@ -258,7 +258,6 @@ class SupremeAgent:
                 logging.error(f"Screenshot error: {e}")
                 return f"Screenshot error: {str(e)}"
 
-        # Update available_tools with the defined functions
         self.available_tools.update({
             'browser_open': browser_open,
             'browser_search': browser_search,
@@ -294,13 +293,11 @@ class SupremeAgent:
 
     def create_specialized_agent(self, config: AgentConfig) -> Agent:
         """Create a specialized agent with specific tools."""
-        # Ensure tools are properly mapped
         agent_functions = {}
         for tool in config.tools:
             if tool in self.available_tools:
                 agent_functions[tool] = self.available_tools[tool]
         
-        # Create agent with explicit function access
         return Agent(
             name=config.name,
             instructions=config.instructions,
@@ -310,18 +307,16 @@ class SupremeAgent:
     def analyze_task(self, task: str) -> List[AgentConfig]:
         """Analyze task and create appropriate agent configurations."""
         try:
-            # For search queries, return a direct search configuration
             if "search" in task.lower() or "find" in task.lower():
                 return [
                     AgentConfig(
                         name="search_agent",
                         instructions="Use browser_search to find the requested information",
-                        tools=["browser_search"],  # Simplified tool list
+                        tools=["browser_search"],
                         next_agent=None
                     )
                 ]
                 
-            # Otherwise, use OpenAI for task analysis
             response = self.speech_client.chat.completions.create(
                 model="gpt-4",
                 messages=[

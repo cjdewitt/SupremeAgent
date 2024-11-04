@@ -1,0 +1,8 @@
+__pycache__
+.pytest_cache
+swarm_mock
+venv
+supreme_agent.log
+test_supreme_agent.py
+test
+test.pub
